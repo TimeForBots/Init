@@ -25,8 +25,15 @@ BOT_CONFIGS_DIR = sys.argv[1]
 # Array of bots (increases by every bot configuration)
 configs = []
 
+# Setup configs
 for cfg in os.listdir(BOT_CONFIGS_DIR) :
 	configs.append(botcfg(BOT_CONFIGS_DIR + '/' + cfg))
+
+# Send boot messages
+for config in configs :
+	if config.bootmsg and config.bootmsgChats :
+		for chat_id in config.bootmsgChats :
+			config.exportBot().sendMessage(chat_id, config.bootmsg)
 
 lastBotUpdateId = [len(configs)]
 
