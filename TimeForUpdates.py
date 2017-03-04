@@ -47,7 +47,6 @@ while True :
 		# Poll for updates
 		if updates and updates[-1].update_id != lastBotUpdateId[update_count] :
 			arg = updates[-1].message.text[1:len(updates[-1].message.text)].split()
-
 			if config.includesMethod(arg[0]) :
 				importlib.import_module(arg[0]).TimeFor(config, updates[-1], arg)
 		
