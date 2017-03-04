@@ -28,11 +28,11 @@ echo $PYTHONENV
 
 # Start Sever
 if [[ -z $1 || $1 == "start" ]]; then
-	python TimeForPoll.py $SERVER_TOP/Bots/configs &
+	python TimeForUpdates.py $SERVER_TOP/Bots/configs &
 
 # Stop server
 elif [[ $1 == "stop" ]]; then
-	pkill -f TimeForPoll.py
+	pkill -f TimeForUpdates.py
 
 # Restart server
 elif [[ $1 == "restart" ]]; then
