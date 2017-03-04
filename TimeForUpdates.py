@@ -39,12 +39,11 @@ while True :
 
 		# Poll for updates
 		if updates and updates[-1].update_id != lastBotUpdateId[update_count] :
-			for update in updates :
-				arg = update.message.text[1:len(update.message.text)].split()
+			arg = updates[-1].message.text[1:len(updates[-1].message.text)].split()
 
 			if config.includesMethod(arg[0]) :
-				importlib.import_module(arg[0]).TimeFor(config, update.message.chat_id, arg)
+				importlib.import_module(arg[0]).TimeFor(config, updates[-1], arg)
 		
-			lastBotUpdateId[update_count] = update.update_id
+			lastBotUpdateId[update_count] = updates[-1].update_id
 
 		update_count += 1
