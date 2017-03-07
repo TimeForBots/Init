@@ -18,6 +18,7 @@
 import sys
 import os
 import importlib
+from datetime import datetime
 from Botconfig import botcfg
 
 BOT_CONFIGS_DIR = sys.argv[1]
@@ -35,21 +36,17 @@ for config in configs :
 		for chat_id in config.bootmsgChats :
 			config.exportBot().sendMessage(chat_id, config.bootmsg)
 
-lastBotUpdateId = [len(configs)]
+lastBotUpdateDate = datetime.now()
 
 while True :
-	update_count = 0
-
 	for config in configs :
 		bot = config.exportBot()
-		updates = bot.getUpdates()
+		updates = bot.getUpdates(offset=-1)
 
 		# Poll for updates
-		if updates[-1] and updates[-1].update_id != lastBotUpdateId[update_count] :
+		if updates and updates[-1].message and updates[-1].message.text and updates[-1].message.date > lastBotUpdateDate :
 			arg = updates[-1].message.text[1:len(updates[-1].message.text)].split()
 			if config.includesMethod(arg[0]) :
 				importlib.import_module(arg[0]).TimeFor(config, updates[-1], arg)
 		
-			lastBotUpdateId[update_count] = updates[-1].update_id
-
-		update_count += 1
+			lastBotUpdateDate = updates[-1].message.date
