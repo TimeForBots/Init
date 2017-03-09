@@ -18,13 +18,29 @@
 import sys
 import os
 import importlib
+
 from datetime import datetime
 from Botconfig import botcfg
+from Binder import bind, isBinded, getBindFromList
 
 BOT_CONFIGS_DIR = sys.argv[1]
 
 # Array of bots (increases by every bot configuration)
 configs = []
+binds = []
+
+def charsInStr(string, char) :
+	prev = 0
+	i = 0
+
+	while True :
+		prev = string.find(char, prev)
+	
+		if prev == -1 :
+			return i
+
+		prev += 1
+		i += 1
 
 # Setup configs
 for cfg in os.listdir(BOT_CONFIGS_DIR) :
@@ -45,8 +61,30 @@ while True :
 
 		# Poll for updates
 		if updates and updates[-1].message and updates[-1].message.text and updates[-1].message.date > lastBotUpdateDate :
-			arg = updates[-1].message.text[1:len(updates[-1].message.text)].split()
-			if config.includesMethod(arg[0]) :
-				importlib.import_module(arg[0]).TimeFor(config, updates[-1], arg)
+			cmd = updates[-1].message.text
+			
+			# Check for bind
+			if cmd.split()[0] == "/bind" and charsInStr(cmd, '/') == 3 :
+				bindStart = cmd.find('/', 1) + 1
+				commandStart = cmd.find('/', bindStart)
+
+				bindstr = cmd[bindStart:commandStart].strip()
+
+				if not config.includesMethod(bindstr.split()[0][0:len(bindstr.split()[0])]) and not isBinded(binds, bindstr) :
+					commandstr = cmd[commandStart + 1:len(cmd)].strip()
+					binds.append(bind(bindstr, commandstr))
+					bot.sendMessage(updates[-1].message.chat_id, 'Successfully binded "' + bindstr + '" to "' + commandstr + '"')
+				else :
+					bot.sendMessage(updates[-1].message.chat_id, "Bind already reserved by another bind or method!")
+			else :
+				msg = updates[-1].message.text[1:len(updates[-1].message.text)]
+
+				if isBinded(binds, msg) :
+					msg = getBindFromList(binds, msg).command
+				
+				args = msg.split()
+
+				if config.includesMethod(args[0]) :
+					importlib.import_module(args[0]).TimeFor(config, updates[-1], args)
 		
 			lastBotUpdateDate = updates[-1].message.date
