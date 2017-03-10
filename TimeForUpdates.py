@@ -76,6 +76,17 @@ while True :
 					bot.sendMessage(updates[-1].message.chat_id, 'Successfully binded "' + bindstr + '" to "' + commandstr + '"')
 				else :
 					bot.sendMessage(updates[-1].message.chat_id, "Bind already reserved by another bind or method!")
+			
+			elif cmd.split()[0] == "/unbind" and charsInStr(cmd, '/') == 2 :
+				bindstr = cmd[cmd.find('/', 1) + 1:len(cmd)]
+
+				delbind = getBindFromList(binds, bindstr)
+				if delbind :
+					binds.remove(delbind)
+					bot.sendMessage(updates[-1].message.chat_id, 'Successfully unbinded "' + bindstr + '"')
+				else :
+					bot.sendMessage(updates[-1].message.chat_id, '"' + bindstr + '" is not binded' )
+
 			else :
 				msg = updates[-1].message.text[1:len(updates[-1].message.text)]
 
