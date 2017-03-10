@@ -72,8 +72,11 @@ while True :
 
 				if not config.includesMethod(bindstr.split()[0][0:len(bindstr.split()[0])]) and not isBinded(binds, bindstr) :
 					commandstr = cmd[commandStart + 1:len(cmd)].strip()
-					binds.append(bind(bindstr, commandstr))
-					bot.sendMessage(updates[-1].message.chat_id, 'Successfully binded "' + bindstr + '" to "' + commandstr + '"')
+					if not isBinded(binds, commandstr) :
+						binds.append(bind(bindstr, commandstr))
+						bot.sendMessage(updates[-1].message.chat_id, 'Successfully binded "' + bindstr + '" to "' + commandstr + '"')
+					else :
+						bot.sendMessage(updates[-1].message.chat_id, "Can't create a bind for another bind")						
 				else :
 					bot.sendMessage(updates[-1].message.chat_id, "Bind already reserved by another bind or method!")
 			
