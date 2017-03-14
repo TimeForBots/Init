@@ -25,8 +25,8 @@ from Binder import bind, isBinded, getBindFromList
 
 BOT_CONFIGS_DIR = sys.argv[1]
 
-# Array of bots (increases by every bot configuration)
-configs = []
+# Polled Arrays
+configs = [] # Array of bots (increases by every bot configuration)
 binds = []
 
 def charsInStr(string, char) :
@@ -46,11 +46,15 @@ def charsInStr(string, char) :
 for cfg in os.listdir(BOT_CONFIGS_DIR) :
 	configs.append(botcfg(BOT_CONFIGS_DIR + '/' + cfg))
 
-# Send boot messages
+# Set boot lists
 for config in configs :
 	if config.bootmsg and config.bootmsgChats :
 		for chat_id in config.bootmsgChats :
 			config.exportBot().sendMessage(chat_id, config.bootmsg)
+
+	if config.binds :
+		for bindEntry in config.binds :
+			binds.append(bindEntry)
 
 lastBotUpdateDate = datetime.now()
 
