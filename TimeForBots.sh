@@ -22,13 +22,13 @@ if [[ ! -z $2 ]]; then
 	SERVER_TOP=$2
 fi
 
-export PYTHONPATH=$SERVER_TOP/:$SERVER_TOP/Bots:$SERVER_TOP/Methods:$SERVER_TOP/Media:$PYTHONENV
+export PYTHONPATH=$SERVER_TOP/:$SERVER_TOP/Config:$SERVER_TOP/Config/Import:$SERVER_TOP/Methods:$PYTHONENV
 
 echo $PYTHONENV
 
 # Start Sever
 if [[ -z $1 || $1 == "start" ]]; then
-	python TimeForUpdates.py $SERVER_TOP/Bots/configs &
+	python TimeForUpdates.py $SERVER_TOP/Config/Bots &
 
 # Stop server
 elif [[ $1 == "stop" ]]; then

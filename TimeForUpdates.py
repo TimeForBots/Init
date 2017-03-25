@@ -20,7 +20,7 @@ import os
 import importlib
 
 from datetime import datetime
-from Botconfig import botcfg
+from Config import botcfg
 from Binder import bind, isBinded, getBindFromList
 
 BOT_CONFIGS_DIR = sys.argv[1]
@@ -43,8 +43,22 @@ def charsInStr(string, char) :
 		i += 1
 
 # Setup configs
-for cfg in os.listdir(BOT_CONFIGS_DIR) :
-	configs.append(botcfg(BOT_CONFIGS_DIR + '/' + cfg))
+for botdir in os.listdir(BOT_CONFIGS_DIR) :
+	
+	maincfgPath  = None
+	audiocfgPath = None
+	schedcfgPath = None
+	
+	for config in os.listdir(BOT_CONFIGS_DIR + '/' + botdir) :
+		
+		if config == "Bot.cfg" :
+			maincfgPath = BOT_CONFIGS_DIR + '/' + botdir + '/' + config
+		elif config == "Audio.cfg" :
+			audiocfgPath = BOT_CONFIGS_DIR + '/' + botdir + '/' + config
+		elif config == "Timed.cfg" :
+			schedcfgPath = BOT_CONFIGS_DIR + '/' + botdir + '/' + config
+		
+	configs.append(botcfg(maincfgPath, audiocfgPath, schedcfgPath))
 
 # Set boot lists
 for config in configs :
